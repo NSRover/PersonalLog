@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>9B005599-903E-4805-A1BE-C4C7437D8459</string>
+	<key>IDESourceControlProjectName</key>
+	<string>PersonalLog</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F14E9476-215F-4953-A3F6-6E66F52C9B0E</key>
+		<string>https://github.com/nirbhayg/PersonalLog.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>PersonalLog.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F14E9476-215F-4953-A3F6-6E66F52C9B0E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/nirbhayg/PersonalLog.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F14E9476-215F-4953-A3F6-6E66F52C9B0E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F14E9476-215F-4953-A3F6-6E66F52C9B0E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>PersonalLog</string>
+		</dict>
+	</array>
+</dict>
+</plist>

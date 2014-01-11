@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9644826618800076003D4634 /* PLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 9644826518800076003D4634 /* PLUtils.m */; };
+		9644826C18800B7A003D4634 /* PLFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9644826B18800B7A003D4634 /* PLFileManager.m */; };
+		9644826F18800B9B003D4634 /* PLLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 9644826E18800B9B003D4634 /* PLLog.m */; };
 		9662E03A187E866E00D01E8E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662E039187E866E00D01E8E /* Foundation.framework */; };
 		9662E03C187E866E00D01E8E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662E03B187E866E00D01E8E /* CoreGraphics.framework */; };
 		9662E03E187E866E00D01E8E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662E03D187E866E00D01E8E /* UIKit.framework */; };
@@ -19,6 +22,14 @@
 		9662E055187E866E00D01E8E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662E03D187E866E00D01E8E /* UIKit.framework */; };
 		9662E05D187E866E00D01E8E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9662E05B187E866E00D01E8E /* InfoPlist.strings */; };
 		9662E05F187E866E00D01E8E /* PersonalLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9662E05E187E866E00D01E8E /* PersonalLogTests.m */; };
+		96D5CC7A187EA61600E9E69C /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96D5CC79187EA61600E9E69C /* Storyboard.storyboard */; };
+		96D5CC7D187EAA5800E9E69C /* PLMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5CC7C187EAA5800E9E69C /* PLMainViewController.m */; };
+		96D5CC7F187EAB3F00E9E69C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC7E187EAB3F00E9E69C /* AssetsLibrary.framework */; };
+		96D5CC81187EAB4C00E9E69C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC80187EAB4C00E9E69C /* AVFoundation.framework */; };
+		96D5CC83187EAB5400E9E69C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC82187EAB5400E9E69C /* CoreMedia.framework */; };
+		96D5CC85187EAB5C00E9E69C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC84187EAB5C00E9E69C /* MediaPlayer.framework */; };
+		96D5CC87187EAB6700E9E69C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC86187EAB6700E9E69C /* MobileCoreServices.framework */; };
+		96D5CC89187EAB7100E9E69C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC88187EAB7100E9E69C /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +43,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9644826418800076003D4634 /* PLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLUtils.h; sourceTree = "<group>"; };
+		9644826518800076003D4634 /* PLUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLUtils.m; sourceTree = "<group>"; };
+		9644826A18800B7A003D4634 /* PLFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLFileManager.h; sourceTree = "<group>"; };
+		9644826B18800B7A003D4634 /* PLFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLFileManager.m; sourceTree = "<group>"; };
+		9644826D18800B9B003D4634 /* PLLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLLog.h; sourceTree = "<group>"; };
+		9644826E18800B9B003D4634 /* PLLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLLog.m; sourceTree = "<group>"; };
 		9662E036187E866E00D01E8E /* PersonalLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PersonalLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9662E039187E866E00D01E8E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9662E03B187E866E00D01E8E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -48,6 +65,15 @@
 		9662E05A187E866E00D01E8E /* PersonalLogTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PersonalLogTests-Info.plist"; sourceTree = "<group>"; };
 		9662E05C187E866E00D01E8E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9662E05E187E866E00D01E8E /* PersonalLogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PersonalLogTests.m; sourceTree = "<group>"; };
+		96D5CC79187EA61600E9E69C /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		96D5CC7B187EAA5800E9E69C /* PLMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLMainViewController.h; sourceTree = "<group>"; };
+		96D5CC7C187EAA5800E9E69C /* PLMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLMainViewController.m; sourceTree = "<group>"; };
+		96D5CC7E187EAB3F00E9E69C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		96D5CC80187EAB4C00E9E69C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		96D5CC82187EAB5400E9E69C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		96D5CC84187EAB5C00E9E69C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		96D5CC86187EAB6700E9E69C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		96D5CC88187EAB7100E9E69C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +81,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96D5CC89187EAB7100E9E69C /* QuartzCore.framework in Frameworks */,
+				96D5CC87187EAB6700E9E69C /* MobileCoreServices.framework in Frameworks */,
+				96D5CC85187EAB5C00E9E69C /* MediaPlayer.framework in Frameworks */,
+				96D5CC83187EAB5400E9E69C /* CoreMedia.framework in Frameworks */,
+				96D5CC81187EAB4C00E9E69C /* AVFoundation.framework in Frameworks */,
+				96D5CC7F187EAB3F00E9E69C /* AssetsLibrary.framework in Frameworks */,
 				9662E03C187E866E00D01E8E /* CoreGraphics.framework in Frameworks */,
 				9662E03E187E866E00D01E8E /* UIKit.framework in Frameworks */,
 				9662E03A187E866E00D01E8E /* Foundation.framework in Frameworks */,
@@ -74,6 +106,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		96448263187FFE93003D4634 /* File Handling */ = {
+			isa = PBXGroup;
+			children = (
+				9644826A18800B7A003D4634 /* PLFileManager.h */,
+				9644826B18800B7A003D4634 /* PLFileManager.m */,
+			);
+			name = "File Handling";
+			sourceTree = "<group>";
+		};
 		9662E02D187E866E00D01E8E = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +137,12 @@
 		9662E038187E866E00D01E8E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				96D5CC88187EAB7100E9E69C /* QuartzCore.framework */,
+				96D5CC86187EAB6700E9E69C /* MobileCoreServices.framework */,
+				96D5CC84187EAB5C00E9E69C /* MediaPlayer.framework */,
+				96D5CC82187EAB5400E9E69C /* CoreMedia.framework */,
+				96D5CC80187EAB4C00E9E69C /* AVFoundation.framework */,
+				96D5CC7E187EAB3F00E9E69C /* AssetsLibrary.framework */,
 				9662E039187E866E00D01E8E /* Foundation.framework */,
 				9662E03B187E866E00D01E8E /* CoreGraphics.framework */,
 				9662E03D187E866E00D01E8E /* UIKit.framework */,
@@ -107,10 +154,16 @@
 		9662E03F187E866E00D01E8E /* PersonalLog */ = {
 			isa = PBXGroup;
 			children = (
-				9662E048187E866E00D01E8E /* PLAppDelegate.h */,
-				9662E049187E866E00D01E8E /* PLAppDelegate.m */,
+				96448263187FFE93003D4634 /* File Handling */,
 				9662E04B187E866E00D01E8E /* Images.xcassets */,
 				9662E040187E866E00D01E8E /* Supporting Files */,
+				96D5CC79187EA61600E9E69C /* Storyboard.storyboard */,
+				96D5CC7B187EAA5800E9E69C /* PLMainViewController.h */,
+				96D5CC7C187EAA5800E9E69C /* PLMainViewController.m */,
+				9644826418800076003D4634 /* PLUtils.h */,
+				9644826518800076003D4634 /* PLUtils.m */,
+				9644826D18800B9B003D4634 /* PLLog.h */,
+				9644826E18800B9B003D4634 /* PLLog.m */,
 			);
 			path = PersonalLog;
 			sourceTree = "<group>";
@@ -118,6 +171,8 @@
 		9662E040187E866E00D01E8E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9662E048187E866E00D01E8E /* PLAppDelegate.h */,
+				9662E049187E866E00D01E8E /* PLAppDelegate.m */,
 				9662E041187E866E00D01E8E /* PersonalLog-Info.plist */,
 				9662E042187E866E00D01E8E /* InfoPlist.strings */,
 				9662E045187E866E00D01E8E /* main.m */,
@@ -225,6 +280,7 @@
 			files = (
 				9662E044187E866E00D01E8E /* InfoPlist.strings in Resources */,
 				9662E04C187E866E00D01E8E /* Images.xcassets in Resources */,
+				96D5CC7A187EA61600E9E69C /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,7 +299,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9644826F18800B9B003D4634 /* PLLog.m in Sources */,
 				9662E04A187E866E00D01E8E /* PLAppDelegate.m in Sources */,
+				9644826618800076003D4634 /* PLUtils.m in Sources */,
+				96D5CC7D187EAA5800E9E69C /* PLMainViewController.m in Sources */,
+				9644826C18800B7A003D4634 /* PLFileManager.m in Sources */,
 				9662E046187E866E00D01E8E /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,13 +423,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Vibhor Deshmukh (3598ZBFYRR)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Vibhor Deshmukh (3598ZBFYRR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PersonalLog/PersonalLog-Prefix.pch";
 				INFOPLIST_FILE = "PersonalLog/PersonalLog-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7540B256-3286-4461-87C9-2073F16C2A17";
+				PROVISIONING_PROFILE = "8610567E-9811-4A4B-80B9-8694A860A224";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -379,13 +439,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Vibhor Deshmukh (3598ZBFYRR)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Vibhor Deshmukh (3598ZBFYRR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PersonalLog/PersonalLog-Prefix.pch";
 				INFOPLIST_FILE = "PersonalLog/PersonalLog-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7540B256-3286-4461-87C9-2073F16C2A17";
+				PROVISIONING_PROFILE = "8610567E-9811-4A4B-80B9-8694A860A224";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -451,6 +511,7 @@
 				9662E064187E866E00D01E8E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9662E065187E866E00D01E8E /* Build configuration list for PBXNativeTarget "PersonalLogTests" */ = {
 			isa = XCConfigurationList;
@@ -459,6 +520,7 @@
 				9662E067187E866E00D01E8E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
