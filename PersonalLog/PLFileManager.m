@@ -10,6 +10,7 @@
 
 #define FM_TEMP_DIRECTORY @"Temp"
 #define FM_DEFAULT_FILE_NAME @"newRecording.mp4"
+#define FM_LOG_DIRECTORY @"Logs"
 
 static PLFileManager* _sharedFileManager;
 
@@ -60,7 +61,58 @@ static PLFileManager* _sharedFileManager;
     return directoryPath;
 }
 
+- (NSArray *)allLogPaths;
+{
+    NSString* pathToDirectory = [self pathForDirectory:FM_LOG_DIRECTORY createIfDoesNotExist:YES];
+    
+    NSFileManager *manager = [[NSFileManager alloc] init];
+    NSError *error = nil;
+    NSArray *directoryContents = [manager contentsOfDirectoryAtPath:pathToDirectory error:&error];
+    
+    NSMutableArray *patternPaths = [[NSMutableArray alloc] init];
+    
+    for(NSString *candidateFile in directoryContents)
+    {
+        NSString *candidateFileFullPath = [pathToDirectory stringByAppendingPathComponent:candidateFile];
+        
+        NSString* fileExtension = [candidateFile pathExtension];
+        if (![fileExtension isEqualToString:@"mov"])
+        {
+            [manager removeItemAtPath:candidateFileFullPath error:nil];
+            continue;
+        }
+        
+        [patternPaths addObject:candidateFileFullPath];
+    }
+    return patternPaths;
+}
 
+- (PLLog *)logForPath:(NSString *)path;
+{
+    NSURL* url = [NSURL fileURLWithPath:path];
+    AVAsset* asset = [AVAsset assetWithURL:url];
+    
+    PLLog* log = [[PLLog alloc] init];
+    
+    //Description
+    NSArray* descriptions = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyDescription keySpace:AVMetadataKeySpaceCommon];
+    AVMetadataItem *item = [descriptions objectAtIndex:0];
+    log.description = item.stringValue;
+    
+    //Title
+    NSArray* titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
+    item = [titles objectAtIndex:0];
+    log.title = item.stringValue;
+
+    //Tags
+    NSArray* tags = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
+    item = [tags objectAtIndex:0];
+    log.tags = item.stringValue;
+    
+    log.videoFilePath = path;
+    
+    return log;
+}
 
 #pragma mark Public
 
@@ -77,6 +129,53 @@ static PLFileManager* _sharedFileManager;
     }
     
     return pathToFile;
+}
+
+- (NSString *)pathForAsset:(PLLog *)log;
+{
+    NSString* pathToDirectory = [self pathForDirectory:FM_LOG_DIRECTORY createIfDoesNotExist:YES];
+    NSString* filename = [NSString stringWithFormat:@"%@.mov", log.ID];
+    NSString* pathToFile = [pathToDirectory stringByAppendingPathComponent:filename];
+    
+    //Remove old file
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([fileManager fileExistsAtPath:pathToFile])
+    {
+        [fileManager removeItemAtPath:pathToFile error:nil];
+    }
+    
+    return pathToFile;
+}
+
+- (NSArray *)allLogs;
+{
+    NSMutableArray* array = [[NSMutableArray alloc] init];
+    
+    NSArray* paths = [self allLogPaths];
+    
+    for (NSString *path in paths)
+    {
+        PLLog* log = [self logForPath:path];
+        if (log)
+        {
+            [array addObject:log];
+        }
+    }
+    
+    return array;
+}
+
+- (BOOL)deleteLogAtPath:(NSString *)path;
+{
+    //Remove old file
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([fileManager fileExistsAtPath:path])
+    {
+        [fileManager removeItemAtPath:path error:nil];
+        return YES;
+    }
+    
+    return NO;
 }
 
 @end

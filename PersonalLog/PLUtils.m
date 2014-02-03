@@ -12,8 +12,13 @@
 
 + (NSString *)uniqueID;
 {
-    NSUUID *uuid = [NSUUID UUID];
-    return [uuid UUIDString];
+    NSDate* dateNow = [NSDate date];
+    
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd(HH:mm:ss)"];
+    NSString *formattedDate = [formatter stringFromDate:dateNow];
+    
+    return [formattedDate description];
 }
 
 

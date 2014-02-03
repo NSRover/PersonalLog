@@ -30,6 +30,8 @@
 		96D5CC85187EAB5C00E9E69C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC84187EAB5C00E9E69C /* MediaPlayer.framework */; };
 		96D5CC87187EAB6700E9E69C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC86187EAB6700E9E69C /* MobileCoreServices.framework */; };
 		96D5CC89187EAB7100E9E69C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D5CC88187EAB7100E9E69C /* QuartzCore.framework */; };
+		96D9D9C71897CA3400512C87 /* PLLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9D9C61897CA3400512C87 /* PLLogManager.m */; };
+		96D9D9CA1897E5F000512C87 /* PLTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9D9C91897E5F000512C87 /* PLTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,10 @@
 		96D5CC84187EAB5C00E9E69C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		96D5CC86187EAB6700E9E69C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		96D5CC88187EAB7100E9E69C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		96D9D9C51897CA3400512C87 /* PLLogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLLogManager.h; sourceTree = "<group>"; };
+		96D9D9C61897CA3400512C87 /* PLLogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLLogManager.m; sourceTree = "<group>"; };
+		96D9D9C81897E5F000512C87 /* PLTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLTableViewController.h; sourceTree = "<group>"; };
+		96D9D9C91897E5F000512C87 /* PLTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,16 +160,12 @@
 		9662E03F187E866E00D01E8E /* PersonalLog */ = {
 			isa = PBXGroup;
 			children = (
+				96733582189A707700326F8D /* Data and utils */,
+				96733581189A706900326F8D /* Main View */,
+				96733580189A705A00326F8D /* Resources */,
+				9673357F189A703700326F8D /* Journal View */,
 				96448263187FFE93003D4634 /* File Handling */,
-				9662E04B187E866E00D01E8E /* Images.xcassets */,
 				9662E040187E866E00D01E8E /* Supporting Files */,
-				96D5CC79187EA61600E9E69C /* Storyboard.storyboard */,
-				96D5CC7B187EAA5800E9E69C /* PLMainViewController.h */,
-				96D5CC7C187EAA5800E9E69C /* PLMainViewController.m */,
-				9644826418800076003D4634 /* PLUtils.h */,
-				9644826518800076003D4634 /* PLUtils.m */,
-				9644826D18800B9B003D4634 /* PLLog.h */,
-				9644826E18800B9B003D4634 /* PLLog.m */,
 			);
 			path = PersonalLog;
 			sourceTree = "<group>";
@@ -197,6 +199,46 @@
 				9662E05B187E866E00D01E8E /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9673357F189A703700326F8D /* Journal View */ = {
+			isa = PBXGroup;
+			children = (
+				96D9D9C81897E5F000512C87 /* PLTableViewController.h */,
+				96D9D9C91897E5F000512C87 /* PLTableViewController.m */,
+			);
+			name = "Journal View";
+			sourceTree = "<group>";
+		};
+		96733580189A705A00326F8D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				96D5CC79187EA61600E9E69C /* Storyboard.storyboard */,
+				9662E04B187E866E00D01E8E /* Images.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		96733581189A706900326F8D /* Main View */ = {
+			isa = PBXGroup;
+			children = (
+				96D5CC7B187EAA5800E9E69C /* PLMainViewController.h */,
+				96D5CC7C187EAA5800E9E69C /* PLMainViewController.m */,
+			);
+			name = "Main View";
+			sourceTree = "<group>";
+		};
+		96733582189A707700326F8D /* Data and utils */ = {
+			isa = PBXGroup;
+			children = (
+				9644826418800076003D4634 /* PLUtils.h */,
+				9644826518800076003D4634 /* PLUtils.m */,
+				9644826D18800B9B003D4634 /* PLLog.h */,
+				9644826E18800B9B003D4634 /* PLLog.m */,
+				96D9D9C51897CA3400512C87 /* PLLogManager.h */,
+				96D9D9C61897CA3400512C87 /* PLLogManager.m */,
+			);
+			name = "Data and utils";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -299,10 +341,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96D9D9C71897CA3400512C87 /* PLLogManager.m in Sources */,
 				9644826F18800B9B003D4634 /* PLLog.m in Sources */,
 				9662E04A187E866E00D01E8E /* PLAppDelegate.m in Sources */,
 				9644826618800076003D4634 /* PLUtils.m in Sources */,
 				96D5CC7D187EAA5800E9E69C /* PLMainViewController.m in Sources */,
+				96D9D9CA1897E5F000512C87 /* PLTableViewController.m in Sources */,
 				9644826C18800B7A003D4634 /* PLFileManager.m in Sources */,
 				9662E046187E866E00D01E8E /* main.m in Sources */,
 			);
@@ -429,7 +473,7 @@
 				GCC_PREFIX_HEADER = "PersonalLog/PersonalLog-Prefix.pch";
 				INFOPLIST_FILE = "PersonalLog/PersonalLog-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8610567E-9811-4A4B-80B9-8694A860A224";
+				PROVISIONING_PROFILE = "EDA11708-B985-4EDF-9B70-E5D642A268FD";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -445,7 +489,7 @@
 				GCC_PREFIX_HEADER = "PersonalLog/PersonalLog-Prefix.pch";
 				INFOPLIST_FILE = "PersonalLog/PersonalLog-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8610567E-9811-4A4B-80B9-8694A860A224";
+				PROVISIONING_PROFILE = "EDA11708-B985-4EDF-9B70-E5D642A268FD";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
