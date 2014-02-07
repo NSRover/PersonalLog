@@ -93,21 +93,40 @@ static PLFileManager* _sharedFileManager;
     AVAsset* asset = [AVAsset assetWithURL:url];
     
     PLLog* log = [[PLLog alloc] init];
-    
+
+    NSString* stringValue = @"";
+    AVMetadataItem *item;
+
     //Description
     NSArray* descriptions = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyDescription keySpace:AVMetadataKeySpaceCommon];
-    AVMetadataItem *item = [descriptions objectAtIndex:0];
-    log.description = item.stringValue;
+    if ([descriptions count] > 0)
+    {
+        item = [descriptions objectAtIndex:0];
+        stringValue = item.stringValue;
+    }
+    log.description = stringValue;
     
     //Title
+    stringValue = @"";
     NSArray* titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-    item = [titles objectAtIndex:0];
-    log.title = item.stringValue;
+    if ([titles count] > 0)
+    {
+        item = [titles objectAtIndex:0];
+        stringValue = item.stringValue;
+    }
+    log.title = stringValue;
 
     //Tags
+    stringValue = @"";
     NSArray* tags = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
-    item = [tags objectAtIndex:0];
-    log.tags = item.stringValue;
+    if ([tags count] > 0)
+    {
+        item = [tags objectAtIndex:0];
+        stringValue = item.stringValue;
+    }
+    log.tags = stringValue;
+    
+    log.ID = [[path lastPathComponent] stringByDeletingPathExtension];
     
     log.videoFilePath = path;
     

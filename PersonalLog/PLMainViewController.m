@@ -8,7 +8,9 @@
 
 #import "PLMainViewController.h"
 #import "PLFileManager.h"
-#import "PLLog.h"
+#import "PLLogManager.h"
+#import <MediaPlayer/MediaPlayer.h>
+#import "PLAppDelegate.h"
 
 typedef enum
 {
@@ -21,21 +23,25 @@ UIType;
 
 @interface PLMainViewController ()
 
+//Capturing
 @property (strong, nonatomic) AVCaptureSession* session;
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *preview;
 @property (strong, nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 
+//Playback
+@property (strong, nonatomic) AVPlayer* player;
+@property (strong, nonatomic) CALayer *playerLayer;
+
+//UI
 @property (assign, nonatomic) CGRect smallPreviewFrame;
 @property (assign, nonatomic) BOOL isPreviewBig;
 
+//State
 @property (assign, nonatomic) int countdownTime;
-
-@property (strong, nonatomic) PLLog* currentLog;
-
-@property (strong, nonatomic) NSURL* tempFileURL;
+@property (assign, nonatomic) UIType currentType;
+@property (assign, nonatomic) BOOL firstLaunch;
 
 //UI constants
-
 @property (strong, nonatomic) UIColor* custBlueColor;
 @property (strong, nonatomic) UIColor* custRedColor;
 @property (strong, nonatomic) UIColor* custGrayColor;
@@ -47,7 +53,7 @@ UIType;
 
 NSString *const stopButtonTitle_wait = @"W a i t !";
 NSString *const stopButtonTitle_stop = @"Stop";
-NSString *const stopButtonTitle_done = @"Save";
+NSString *const stopButtonTitle_save = @"Save";
 NSString *const stopButtonTitle_new = @"New";
 
 NSString *const statusLabelTitle_countdown = @"Starting in..";
@@ -73,7 +79,6 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
     //Inputs
     NSArray* devices = [AVCaptureDevice devices];
     AVCaptureDevice* frontCamera;
-    AVCaptureDevice* backCamera;
     AVCaptureDevice* microphone;
     
     for (AVCaptureDevice *device in devices)
@@ -86,42 +91,31 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
         //Camera
         else
         {
-            if ([device position] == AVCaptureDevicePositionBack)
-            {
-                backCamera = device;
-            }
-            else
-            {
-                frontCamera = device;
-            }
+            frontCamera = device;
         }
     }
     
-//    if (backCamera)
-//    {
-//        NSError* error = nil;
-//        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
-//        if (!input)
-//        {
-//            NSLog(@"error");
-//        }
-//        if ([_session canAddInput:input])
-//        {
-//            [_session addInput:input];
-//        }
-//        else
-//        {
-//            NSLog(@"error");
-//        }
-//
-//    }
     if (frontCamera)
     {
         NSError* error = nil;
         AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
         if (!input)
         {
-            NSLog(@"error");
+            NSLog(@"No fraont cam!");
+        }
+        if ([_session canAddInput:input])
+        {
+            [_session addInput:input];
+        }
+    }
+    
+    if (microphone)
+    {
+        NSError* error = nil;
+        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:microphone error:&error];
+        if (!input)
+        {
+            NSLog(@"No microphone!");
         }
         if ([_session canAddInput:input])
         {
@@ -142,9 +136,16 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
         NSLog(@"error");
     }
     
-
     [_session commitConfiguration];
-    [_session startRunning];
+}
+
+- (void)initPlaybackSession;
+{
+    self.player = [[AVPlayer alloc] init];
+    self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
+    [_previewView.layer addSublayer:_playerLayer];
+    [_playerLayer setFrame:_previewView.bounds];
+    _playerLayer.hidden = YES;
 }
 
 #pragma mark delegates
@@ -173,28 +174,53 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
 
 #pragma mark Capturing
 
+- (void)beginCaptureSession;
+{
+    if (!_session.isRunning)
+    {
+        [_session startRunning];
+    }
+}
+
 - (void)startRecording;
 {
-    self.tempFileURL = [[NSURL alloc] initFileURLWithPath:[[PLFileManager sharedFileManager] pathForNewRecording]];
-    [_movieFileOutput startRecordingToOutputFileURL:_tempFileURL recordingDelegate:self];
-
-    //Log object
-    self.currentLog = [PLLog newLog];
+    [self beginCaptureSession];
+    [_movieFileOutput startRecordingToOutputFileURL:[[NSURL alloc] initFileURLWithPath:_currentLog.videoFilePath]
+                                  recordingDelegate:self];
+    
+    self.mode = UIModeRecording;
 }
 
 #pragma mark UI
 
-- (void)prepareUIFor:(UIType)type;
+- (void)populateDetails;
 {
+    _titleTextField.text = _currentLog.title;
+    
+    //Tags
+    _tagsTextField.text = _currentLog.tags;
+    
+    //Description
+    _notesTextArea.text = _currentLog.description;
+}
+
+- (void)privatePrepareUI;
+{
+    UIType type = _currentType;
+    
     if (type == UITypeBeginCountdown)
     {
         //Stop button
         [self.stopButton.titleLabel setText:stopButtonTitle_wait];
         [self.stopButton.titleLabel setTextColor:_custRedColor];
+        self.stopButton.alpha = 1.0;
         
         //Delete Button
         [self.deleteButton setAlpha:0.0];
         [self.deleteButton setEnabled:NO];
+        
+        //update button
+        [self hideUpdateButton];
         
         //List button
         [self.listButton.titleLabel setTextColor:_custGrayColor];
@@ -205,6 +231,10 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
         //Stop button
         [self.stopButton.titleLabel setText:stopButtonTitle_stop];
         [self.stopButton.titleLabel setTextColor:_custBlueColor];
+        self.stopButton.alpha = 1.0;
+        
+        //update button
+        [self hideUpdateButton];
         
         //Status label
         [self.countdownLblStatus setText:statusLabelTitle_recording];
@@ -215,8 +245,9 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
     else if (type == UITypeEditDetails)
     {
         //Stop button
-        [self.stopButton.titleLabel setText:stopButtonTitle_done];
-        [self.stopButton.titleLabel setTextColor:_custGreenColor];
+        [self.stopButton.titleLabel setText:stopButtonTitle_new];
+        [self.stopButton.titleLabel setTextColor:_custGrayColor];
+        self.stopButton.alpha = 1.0;
         
         //Status label
         [self.countdownLblStatus setText:statusLabelTitle_recorded];
@@ -235,10 +266,14 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
         //Stop button
         [self.stopButton.titleLabel setText:stopButtonTitle_new];
         [self.stopButton.titleLabel setTextColor:_custGrayColor];
+        self.stopButton.alpha = 1.0;
         
         //Status label
-        [self.countdownLblStatus setText:statusLabelTitle_previousLog];
+        [self.countdownLblStatus setText:[[PLLogManager sharedManager] lastLogGap]];
         [self.countdownLblStatus setTextColor:_custGrayColor];
+        
+        //update button
+        [self hideUpdateButton];
         
         //Delete Button
         self.deleteButton.alpha = 0.0;
@@ -247,7 +282,15 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
         [self.deleteButton.titleLabel setTintColor:_custRedColor];
         
         [self maximiseBottomBar];
+        
+        [self beginCaptureSession];
     }
+}
+
+- (void)prepareUIFor:(UIType)type;
+{
+    self.currentType = type;
+    [self performSelector:@selector(privatePrepareUI) withObject:nil afterDelay:0.3];
 }
 
 - (void)prepareColors;
@@ -278,6 +321,33 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
     }];
 }
 
+- (void)showBusyView;
+{
+    [UIView animateWithDuration:0.2 animations:^(void){
+        [self.activityView setAlpha:1.0];
+    }];
+}
+
+- (void)hideBusyView;
+{
+    [UIView animateWithDuration:0.2 animations:^(void){
+        [self.activityView setAlpha:0.0];
+    }];
+}
+
+- (void)showUpdateButton;
+{
+    [self.updateButton.titleLabel setTextColor:_custGreenColor];
+    self.updateButton.alpha = 1.0;
+    self.updateButton.enabled = YES;
+}
+
+- (void)hideUpdateButton;
+{
+    self.updateButton.alpha = 0.0;
+    self.updateButton.enabled = NO;
+}
+
 #pragma mark Main
 
 - (void)viewDidLoad
@@ -285,8 +355,19 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     
+    //Assign to delegate
+    PLAppDelegate *appDelegate = (PLAppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.mainViewController = self;
+
+    //Initializations
     [self prepareColors];
     [self initCaptureSession];
+    [self initPlaybackSession];
+    
+    [self beginCaptureSession];
+    self.mode = UIModeBeginRecording;
+    
+    self.firstLaunch = YES;
     
     //Gestures
     UIGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTapped)];
@@ -295,9 +376,35 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
 
 - (void)viewDidAppear:(BOOL)animated;
 {
+    if (_mode == UIModeBeginRecording)
+    {
+        if (_firstLaunch)
+        {
+            self.firstLaunch = NO;
+            [self beginNewLogEntry];
+        }
+        else
+        {
+            [self prepareUIFor:UITypeStartNew];
+        }
+
+    }
+    else if (_mode == UIModePlayback)
+    {
+        [self prepareUIFor:UITypeEditDetails];
+    }
+}
+
+- (void)beginNewLogEntry;
+{
+    [self stopLogPlayback];
+    
+    self.currentLog = [PLLog newLog];
+    [self populateDetails];
+    
     //ui
     [self prepareUIFor:UITypeBeginCountdown];
-    
+
     //Countdown
     [self beginCountDown];
     
@@ -305,10 +412,82 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
     [self previewTapped];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)playbackLog:(PLLog *)log;
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.currentLog = log;
+    
+    //UI
+    [self prepareUIFor:UITypeEditDetails];
+    
+    //Play
+    [self playLog];
+}
+
+- (void)updateMetaDataForObject:(id)object;
+{
+    //Meta Data
+    NSMutableArray* metaDataCollection = [[NSMutableArray alloc] init];
+
+    //Title
+    _currentLog.title = _titleTextField.text;
+    AVMutableMetadataItem* titleItem = [[AVMutableMetadataItem alloc] init];
+    titleItem.keySpace = AVMetadataKeySpaceCommon;
+    titleItem.key = AVMetadataCommonKeyTitle;
+    titleItem.value = _currentLog.title;
+    [metaDataCollection addObject:titleItem];
+    
+    //Tags
+    _currentLog.tags = _tagsTextField.text;
+    AVMutableMetadataItem* tagsItem = [[AVMutableMetadataItem alloc] init];
+    tagsItem.keySpace = AVMetadataKeySpaceCommon;
+    tagsItem.key = AVMetadataCommonKeyAlbumName;
+    tagsItem.value = _currentLog.tags;
+    [metaDataCollection addObject:tagsItem];
+    
+    //Description
+    _currentLog.description = _notesTextArea.text;
+    AVMutableMetadataItem* descriptionItem = [[AVMutableMetadataItem alloc] init];
+    descriptionItem.keySpace = AVMetadataKeySpaceCommon;
+    descriptionItem.key = AVMetadataCommonKeyDescription;
+    descriptionItem.value = _currentLog.description;
+    [metaDataCollection addObject:descriptionItem];
+    
+    if (_mode == UIModeRecording)
+    {
+        AVCaptureMovieFileOutput *output = (AVCaptureMovieFileOutput *)object;
+        output.metadata = metaDataCollection;
+    }
+    else if(_mode == UIModePlayback)
+    {
+        AVAssetExportSession* session = (AVAssetExportSession *)object;
+        session.metadata = metaDataCollection;
+    }
+}
+
+#pragma mark Playback
+
+- (void)playLog;
+{
+    NSURL* urlToPlay;
+    urlToPlay = [NSURL fileURLWithPath:_currentLog.videoFilePath];
+    
+    AVPlayerItem* item = [[AVPlayerItem alloc] initWithURL:urlToPlay];
+    [_player replaceCurrentItemWithPlayerItem:item];
+    [_player play];
+    _playerLayer.hidden = NO;
+    
+    _preview.hidden = YES;
+}
+
+- (void)stopLogPlayback;
+{
+    if (!_playerLayer.hidden)
+    {
+        [_player pause];
+        _playerLayer.hidden = YES;
+        _preview.hidden = NO;
+        [self beginCaptureSession];
+    }
 }
 
 #pragma mark Interaction
@@ -331,12 +510,8 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
     [UIView animateWithDuration:0.1 animations:^{
         _previewView.frame = targetFrame;
         _preview.frame = _previewView.bounds;
+        _playerLayer.frame = _previewView.bounds;
     }];
-}
-
-- (void)delayedPrepareUICallForEditDetails;
-{
-    [self prepareUIFor:UITypeEditDetails];
 }
 
 - (IBAction)stopButtonTapped:(id)sender
@@ -344,18 +519,32 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
     //Stop recording
     if ([self.stopButton.titleLabel.text isEqualToString:stopButtonTitle_stop])
     {
+        //meta data
+        [self updateMetaDataForObject:_movieFileOutput];
+        
         [_movieFileOutput stopRecording];
+        [_session stopRunning];
+        
+        [[PLLogManager sharedManager] refreshedLogs];
+        
+        [self prepareUIFor:UITypeEditDetails];
+        self.mode = UIModePlayback;
+        [self playLog];
+        
         if (_isPreviewBig)
         {
             [self previewTapped];
         }
-        [self performSelector:@selector(delayedPrepareUICallForEditDetails) withObject:nil afterDelay:0.2];
     }
     //Save
-    else if ([self.stopButton.titleLabel.text isEqualToString:stopButtonTitle_done])
+    else if ([self.stopButton.titleLabel.text isEqualToString:stopButtonTitle_save])
     {
+        //Busy View
+        [self performSelectorInBackground:@selector(showBusyView) withObject:nil];
+        
         //Asset
-        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:_tempFileURL options:nil];
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[[NSURL alloc] initFileURLWithPath:_currentLog.videoFilePath]
+                                                    options:nil];
 
         //Meta Data
         NSMutableArray* metaDataCollection;
@@ -368,30 +557,6 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
             metaDataCollection = [[NSMutableArray alloc] init];
         }
         
-        //Title
-        _currentLog.title = _titleTextField.text;
-        AVMutableMetadataItem* titleItem = [[AVMutableMetadataItem alloc] init];
-        titleItem.keySpace = AVMetadataKeySpaceCommon;
-        titleItem.key = AVMetadataCommonKeyTitle;
-        titleItem.value = _currentLog.title;
-        [metaDataCollection addObject:titleItem];
-        
-        //Tags
-        _currentLog.tags = _tagsTextField.text;
-        AVMutableMetadataItem* tagsItem = [[AVMutableMetadataItem alloc] init];
-        tagsItem.keySpace = AVMetadataKeySpaceCommon;
-        tagsItem.key = AVMetadataCommonKeyAlbumName;
-        tagsItem.value = _currentLog.tags;
-        [metaDataCollection addObject:tagsItem];
-        
-        //Description
-        _currentLog.description = _notesTextArea.text;
-        AVMutableMetadataItem* descriptionItem = [[AVMutableMetadataItem alloc] init];
-        descriptionItem.keySpace = AVMetadataKeySpaceCommon;
-        descriptionItem.key = AVMetadataCommonKeyDescription;
-        descriptionItem.value = _currentLog.description;
-        [metaDataCollection addObject:descriptionItem];
-        
         NSString* outputPath = [[PLFileManager sharedFileManager] pathForAsset:_currentLog];
         NSURL* outputUrl = [NSURL fileURLWithPath:outputPath];
         
@@ -400,13 +565,14 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
         CMTimeRange range = CMTimeRangeMake(kCMTimeZero, [asset duration]);
         exportSession.timeRange = range;
         exportSession.outputFileType = AVFileTypeQuickTimeMovie;
-        exportSession.metadata = metaDataCollection;
+        [self updateMetaDataForObject:exportSession];
         
         [exportSession exportAsynchronouslyWithCompletionHandler:^{
             switch ([exportSession status])
             {
                 case AVAssetExportSessionStatusCompleted:
                     [self prepareUIFor:UITypeStartNew];
+                    [self hideBusyView];
                     break;
                 case AVAssetExportSessionStatusFailed:
                     NSLog(@"Export failed: %@", [exportSession error]);
@@ -419,23 +585,34 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
             }
         }];
     }
-//    else if ([self.stopButton.titleLabel.text isEqualToString:stopButtonTitle_done])
-//    {
-//        
-//    }
+    else if ([self.stopButton.titleLabel.text isEqualToString:stopButtonTitle_wait])
+    {
+        [self stopCountdown];
+    }
+    else if ([self.stopButton.titleLabel.text isEqualToString:stopButtonTitle_new])
+    {
+        [self prepareUIFor:UITypeBeginCountdown];
+        [self beginNewLogEntry];
+    }
 }
 
 - (IBAction)deleteButtonTapped:(id)sender
 {
+    if ([[PLLogManager sharedManager] deletLog:_currentLog])
+    {
+        self.currentLog = nil;
+    }
+    [self stopLogPlayback];
+    
+    [self prepareUIFor:UITypeStartNew];
 }
 
 - (IBAction)listButtonTapped:(id)sender
 {
+    
 }
 
-- (void)saveCurrentLog;
-{
-    
+- (IBAction)updateButtonTapped:(id)sender {
 }
 
 #pragma mark Countdown
@@ -526,6 +703,41 @@ NSString *const statusLabelTitle_previousLog = @"Last log:";
 
     self.countdownTime = 0;
     [self tock];
+}
+
+- (void)stopCountdown;
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(tick) object:nil];
+    
+    _countdownLbl1.alpha = 0.0;
+    _countdownLbl2.alpha = 0.0;
+    _countdownLbl3.alpha = 0.0;
+    if (_isPreviewBig)
+    {
+        [self previewTapped];
+    }
+    
+    [self prepareUIFor:UITypeStartNew];
+}
+
+#pragma mark Textfield delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
+{
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField;
+{
+    if (_mode == UIModePlayback)
+    {
+        [self showUpdateButton];
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField;
+{
+    [textField resignFirstResponder];
+    return YES;
 }
 
 @end

@@ -10,4 +10,6 @@
 
 @interface PLTableViewController : UITableViewController
 
+- (IBAction)popView:(id)sender;
+
 @end

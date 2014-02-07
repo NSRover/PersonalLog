@@ -10,10 +10,12 @@
 #import "PLFileManager.h"
 #import "PLLog.h"
 #import "PLLogManager.h"
+#import "PLMainViewController.h"
+#import "PLAppDelegate.h"
 
 @interface PLTableViewController ()
 
-@property (strong, nonatomic) NSArray* logs;
+@property (strong, nonatomic) NSMutableArray* logs;
 
 @end
 
@@ -34,7 +36,14 @@
     
     self.title = @"Journal";
     
-    self.logs = [[PLLogManager sharedManager] refreshedLogs];
+    self.logs = [[[PLLogManager sharedManager] refreshedLogs] mutableCopy];
+}
+
+- (void)viewDidAppear:(BOOL)animated;
+{
+    PLAppDelegate *appDelegate = (PLAppDelegate *)[[UIApplication sharedApplication] delegate];
+    PLMainViewController* vc = (PLMainViewController *)appDelegate.mainViewController;
+    vc.mode = UIModeBeginRecording;
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,55 +76,38 @@
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-*/
 
-/*
-// Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+        PLLog* log = [_logs objectAtIndex:[indexPath row]];
+        
+        if ([[PLLogManager sharedManager] deletLog:log])
+        {
+            [_logs removeObject:log];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
+    PLLog* log = [_logs objectAtIndex:[indexPath row]];
+    PLAppDelegate *appDelegate = (PLAppDelegate *)[[UIApplication sharedApplication] delegate];
+    PLMainViewController* vc = (PLMainViewController *)appDelegate.mainViewController;
+    vc.mode = UIModePlayback;
+    [vc playbackLog:log];
+    
+    [self popView:nil];
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+- (IBAction)popView:(id)sender
 {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
- */
 
 @end

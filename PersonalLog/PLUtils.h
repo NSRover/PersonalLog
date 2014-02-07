@@ -11,5 +11,7 @@
 @interface PLUtils : NSObject
 
 + (NSString *)uniqueID;
++ (NSDate *)dateForID:(NSString *)ID;
++ (NSString*)timeIntervalWithStartDate:(NSDate*)d1 withEndDate:(NSDate*)d2;
 
 @end

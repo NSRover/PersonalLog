@@ -14,7 +14,8 @@
 @property (strong, nonatomic) NSArray* logs;
 
 - (NSArray *)refreshedLogs;
-- (void)deletLog:(PLLog *)log;
+- (NSString *)lastLogGap;
+- (BOOL)deletLog:(PLLog *)log;
 
 + (id)sharedManager;
 

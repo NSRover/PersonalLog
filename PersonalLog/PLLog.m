@@ -8,6 +8,7 @@
 
 #import "PLLog.h"
 #import "PLUtils.h"
+#import "PLFileManager.h"
 
 @implementation PLLog
 
@@ -17,6 +18,18 @@
     
     PLLog *log = [[self alloc] init];
     log.ID = newID;
+    
+    NSDate* date = [NSDate date];
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterLongStyle];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    log.title = [formatter stringFromDate:date];
+    
+    log.tags = @"#PersonalLog ";
+    
+    log.description = [NSString stringWithFormat:@"This is a personal log entered on %@", log.title];
+    
+    log.videoFilePath = [[PLFileManager sharedFileManager] pathForAsset:log];
     
     return log;
 }
